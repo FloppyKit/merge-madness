@@ -1,7 +1,7 @@
 {
-  "name": "merge-game",
+  "name": "merge-madness",
   "version": "1.0.0",
-  "description": "",
+  "description": "Merge Madness: a pretend-coins merge game for Miles",
   "main": "index.js",
   "scripts": {
     "test": "vitest run",

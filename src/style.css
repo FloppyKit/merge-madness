@@ -5,3 +5,4 @@ body{margin:0;background:#1d2440;font-family:system-ui,sans-serif;color:#fff;tou
 button{font-size:20px;border:0;border-radius:12px;padding:12px;width:100%;margin:6px 0;cursor:pointer;background:#4caf50;color:#fff}
 .shop-item{background:#ff9800}.shop-item:disabled{background:#666;cursor:not-allowed}
 .shop-item small{display:block;font-size:13px}#msg{min-height:24px;color:#8f8}
+#title{margin:0 0 8px;font-size:22px;color:#ffd54a;text-align:center}
