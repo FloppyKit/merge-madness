@@ -1,12 +1,12 @@
 import * as C from '../config';
 
 export type Cell = number | null; // tier, or empty
-export interface GameState { cols: number; rows: number; cells: Cell[]; coins: number; boostMerges: number; }
+export interface GameState { cols: number; rows: number; cells: Cell[]; coins: number; boostMerges: number; won: boolean; }
 export type ShopId = keyof typeof C.SHOP;
 export type MoveResult = { kind: 'merge'; tier: number; coins: number } | { kind: 'move' } | { kind: 'swap' } | { kind: 'none' };
 
 export function newGame(): GameState {
-  return { cols: C.BOARD_COLS, rows: C.BOARD_ROWS, cells: Array(C.BOARD_COLS * C.BOARD_ROWS).fill(null), coins: C.STARTING_COINS, boostMerges: 0 };
+  return { cols: C.BOARD_COLS, rows: C.BOARD_ROWS, cells: Array(C.BOARD_COLS * C.BOARD_ROWS).fill(null), coins: C.STARTING_COINS, boostMerges: 0, won: false };
 }
 export const idx = (s: GameState, x: number, y: number) => y * s.cols + x;
 export const emptyCells = (s: GameState) => s.cells.map((c, i) => (c === null ? i : -1)).filter(i => i >= 0);
@@ -72,4 +72,11 @@ export function buy(s: GameState, id: ShopId, rand = Math.random): { ok: boolean
   }
   s.coins -= item.price;
   return { ok: true, cell };
+}
+
+// True exactly once per save: the first time an orb of WIN_TIER (or bigger) is on the board.
+export function checkWin(s: GameState): boolean {
+  if (s.won || !s.cells.some(c => c !== null && c >= C.WIN_TIER)) return false;
+  s.won = true;
+  return true;
 }

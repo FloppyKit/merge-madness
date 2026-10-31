@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GameState, moveItem } from '../core/game';
-import { TIER_COLORS } from '../config';
+import { TIER_COLORS, tierValue } from '../config';
 
 const CELL = 96, PAD = 12;
 export class BoardScene extends Phaser.Scene {
@@ -35,7 +35,8 @@ export class BoardScene extends Phaser.Scene {
       gfx.fillStyle(0x000000, 0.25).fillCircle(3, 5, 34);
       gfx.fillStyle(TIER_COLORS[t]).fillCircle(0, 0, 34);
       gfx.fillStyle(0xffffff, 0.35).fillCircle(-11, -12, 10);
-      const txt = this.add.text(0, 0, String(t), { fontSize: '32px', fontStyle: 'bold', color: '#fff', stroke: '#000', strokeThickness: 4 }).setOrigin(0.5);
+      const label = String(tierValue(t)); const fs = [0, 34, 34, 28, 22, 18][label.length] ?? 16;
+      const txt = this.add.text(0, 0, label, { fontSize: `${fs}px`, fontStyle: 'bold', color: '#fff', stroke: '#000', strokeThickness: 4 }).setOrigin(0.5);
       c.add([gfx, txt]); c.setSize(76, 76).setData('i', i);
       c.setInteractive({ draggable: true, useHandCursor: true });
       this.items.set(i, c);

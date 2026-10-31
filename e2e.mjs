@@ -37,4 +37,20 @@ console.log('full board: coins', await coins(), 'msg', await p.textContent('#msg
 await p.evaluate(()=>{ localStorage.setItem('miles-merge-v0', JSON.stringify({cols:6,rows:6,cells:Array(36).fill(null),coins:49,boostMerges:0})); });
 await p.reload(); await p.waitForTimeout(600);
 console.log('49 coins: disabled', await p.isDisabled('#shop-luckyChance'), 'title', await p.getAttribute('#shop-luckyChance','title'));
+// 2048 board with many numbers
+await p.evaluate(()=>{ const c=Array(36).fill(null); [1,2,3,4,5,6,7,8,9,10,11,12,13,14].forEach((t,i)=>c[i+2]=t); localStorage.setItem('miles-merge-v0', JSON.stringify({cols:6,rows:6,cells:c,coins:200,boostMerges:0,won:true})); });
+await p.reload(); await p.waitForTimeout(800);
+console.log('won=true save: overlay shown?', await p.locator('#win-overlay').count());
+await p.screenshot({ path: 'shots/06-2048-board.png' });
+// WIN: two 8192 (tier 13) side by side
+await p.evaluate(()=>{ const c=Array(36).fill(null); c[14]=13; c[15]=13; c[0]=5; c[1]=9; localStorage.setItem('miles-merge-v0', JSON.stringify({cols:6,rows:6,cells:c,coins:10,boostMerges:0})); });
+await p.reload(); await p.waitForTimeout(800);
+{ const a=at(14), c=at(15); await p.mouse.move(a.x,a.y); await p.mouse.down(); await p.mouse.move(c.x-20,c.y,{steps:8}); await p.mouse.move(c.x,c.y,{steps:4}); await p.mouse.up(); }
+await p.waitForTimeout(450);
+console.log('win: cell15', (await p.evaluate(()=>window.__state.cells))[15], 'won', await p.evaluate(()=>window.__state.won), 'overlay', await p.locator('#win-overlay').isVisible(), 'confetti', await p.locator('#confetti').count(), 'text', await p.textContent('.win-title'));
+await p.screenshot({ path: 'shots/07-you-win.png' });
+await p.click('#keep-playing'); await p.waitForTimeout(200);
+console.log('after keep playing overlay', await p.locator('#win-overlay').count());
+await p.reload(); await p.waitForTimeout(800);
+console.log('after reload (won save) overlay', await p.locator('#win-overlay').count(), 'won', await p.evaluate(()=>window.__state.won));
 console.log('errors', errs); await b.close();
