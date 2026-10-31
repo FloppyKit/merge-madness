@@ -41,10 +41,10 @@ export const SPAWN_TIER2_CHANCE = 0;
 
 // ----- Shop prices and effects -----
 export const SHOP = {
-  luckySpawn: { name: 'Lucky Spawn', price: 15, description: 'Drops a 4 orb' },
-  coinBoost: { name: 'Coin Boost', price: 25, description: '2x coins for the next 5 merges', merges: 5, multiplier: 2 },
-  magicUpgrade: { name: 'Magic Upgrade', price: 40, description: 'Your smallest orb doubles (2 → 4, 4 → 8...)' },
-  luckyChance: { name: 'Lucky Chance', price: 50, description: 'A surprise orb! Could be a 2... or a 256!' },
+  luckySpawn: { name: 'Lucky Spawn', price: 30, description: 'Drops a 4 orb' },
+  coinBoost: { name: 'Coin Boost', price: 50, description: '2x coins for the next 5 merges', merges: 5, multiplier: 2 },
+  magicUpgrade: { name: 'Magic Upgrade', price: 80, description: 'Your smallest orb doubles (2 → 4, 4 → 8...)' },
+  luckyChance: { name: 'Lucky Chance', price: 100, description: 'A surprise orb! Could be a 2... or a 256!' },
 };
 
 // ----- Lucky Chance odds (Miles designed these!) -----
@@ -57,3 +57,14 @@ export const SHOP = {
 export const LUCKY_CHANCE_WEIGHTS: Record<number, number> = {
   1: 50, 2: 40, 3: 30, 4: 25, 5: 20, 6: 10, 7: 1, 8: 0.1,
 };
+
+// ----- Math Challenge (free!) -----
+// Coins you win for a correct answer.
+export const MATH_REWARD = 10;
+// How many answer buttons (A, B, C, D...). 2 to 6 works.
+export const MATH_CHOICES = 4;
+// Number ranges for each kind of question (min and max, both included).
+export const MATH_ADD = { min: 25, max: 499 };     // e.g. 347 + 128
+export const MATH_SUB = { min: 25, max: 999 };     // answers are never negative
+export const MATH_MUL = { min: 2, max: 12 };       // times tables up to 12 x 12
+export const MATH_DIV = { min: 2, max: 12 };       // divisor and answer, always a whole number

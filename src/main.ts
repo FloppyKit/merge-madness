@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 import { BoardScene } from './scenes/BoardScene';
 import { load, save } from './core/save';
 import { buy, spawn, resetGame, checkWin, ShopId } from './core/game';
-import { SHOP, tierValue } from './config';
+import { SHOP, tierValue, MATH_REWARD } from './config';
 import { showWin } from './win';
+import { makeQuestion, checkAnswer, LETTERS } from './core/math';
 
 const state = load();
 const $ = (id: string) => document.getElementById(id)!;
@@ -34,6 +35,32 @@ $('new-game-btn').onclick = () => {
   document.body.appendChild(o);
   $('confirm-no').onclick = () => o.remove();
   $('confirm-yes').onclick = () => { o.remove(); document.getElementById('win-overlay')?.remove(); resetGame(state); scene.redraw(); msg('New game! Tap Spawn to begin ✨'); refresh(); };
+};
+
+$('math-sub').textContent = `free! +${MATH_REWARD} coins`;
+$('math-btn').onclick = () => {
+  if (document.getElementById('math-overlay')) return;
+  const o = document.createElement('div'); o.id = 'math-overlay'; document.body.appendChild(o);
+  const ask = () => {
+    const q = makeQuestion(); (window as any).__math = q;
+    o.innerHTML = `<div class="math-box"><div class="math-title">Math Challenge 🧮</div><div id="math-q">${q.text}</div><div id="math-choices"></div><div id="math-result"></div><div id="math-nav"></div></div>`;
+    q.choices.forEach((c, i) => {
+      const b = document.createElement('button'); b.className = 'math-choice'; b.id = `math-choice-${LETTERS[i]}`; b.dataset.value = String(c);
+      b.innerHTML = `<b>${LETTERS[i]}</b> ${c}`;
+      b.onclick = () => {
+        o.querySelectorAll<HTMLButtonElement>('.math-choice').forEach(x => { x.disabled = true; if (Number(x.dataset.value) === q.answer) x.classList.add('right'); });
+        const won = checkAnswer(q, c); state.coins += won;
+        const r = $('math-result'); r.className = won ? 'good' : 'bad';
+        r.textContent = won ? `Correct! +${won} coins 🎉` : `Oops! The answer was ${q.answer}`;
+        if (!won) b.classList.add('wrong');
+        $('math-nav').innerHTML = '<button id="math-next">Next question ➡️</button><button id="math-close">Close</button>';
+        $('math-next').onclick = ask; $('math-close').onclick = () => o.remove();
+        refresh();
+      };
+      $('math-choices').appendChild(b);
+    });
+  };
+  ask();
 };
 
 scene = new BoardScene(state, refresh);

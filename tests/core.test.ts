@@ -69,7 +69,7 @@ describe('2048 numbers', () => {
 describe('Lucky Chance', () => {
   const W = { 1: 50, 2: 40, 3: 30, 4: 25, 5: 20, 6: 10, 7: 1, 8: 0.1 }; // total 176.1
   const at = (x: number) => () => x / 176.1;
-  it('config matches Miles numbers', () => { expect(LUCKY_CHANCE_WEIGHTS).toEqual(W); expect(SHOP.luckyChance.price).toBe(50); });
+  it('config matches Miles numbers', () => { expect(LUCKY_CHANCE_WEIGHTS).toEqual(W); expect(SHOP.luckyChance.price).toBe(100); });
   it('weighted pick respects boundaries (incl. decimal 0.1)', () => {
     expect(weightedPick(W, at(0))).toBe(1);
     expect(weightedPick(W, at(49.999))).toBe(1);
@@ -90,19 +90,19 @@ describe('Lucky Chance', () => {
     for (const [t, w] of Object.entries(W)) expect(Math.abs(counts[+t] / 10000 - w)).toBeLessThan(Math.max(0.05, w * 0.05));
   });
   it('zero weight never picked', () => { expect(weightedPick({ 1: 0, 2: 1 }, () => 0)).toBe(2); });
-  it('buy deducts 50 and places the picked tier', () => {
-    const s = newGame(); s.coins = 60;
+  it('buy deducts 100 and places the picked tier', () => {
+    const s = newGame(); s.coins = 110;
     const r = buy(s, 'luckyChance', at(125));
     expect(r.ok).toBe(true); expect(r.tier).toBe(4); expect(s.coins).toBe(10);
     expect(s.cells[r.cell!]).toBe(4); expect(s.cells.filter(c => c !== null).length).toBe(1);
   });
   it('refuses when full board, coins unchanged', () => {
-    const s = newGame(); s.coins = 100; s.cells.fill(1);
-    expect(buy(s, 'luckyChance', at(0))).toEqual({ ok: false, reason: 'Board is full' }); expect(s.coins).toBe(100);
+    const s = newGame(); s.coins = 200; s.cells.fill(1);
+    expect(buy(s, 'luckyChance', at(0))).toEqual({ ok: false, reason: 'Board is full' }); expect(s.coins).toBe(200);
   });
-  it('refuses when coins < 50', () => {
-    const s = newGame(); s.coins = 49;
-    expect(buy(s, 'luckyChance').ok).toBe(false); expect(s.coins).toBe(49); expect(s.cells.every(c => c === null)).toBe(true);
+  it('refuses when coins < 100', () => {
+    const s = newGame(); s.coins = 99;
+    expect(buy(s, 'luckyChance').ok).toBe(false); expect(s.coins).toBe(99); expect(s.cells.every(c => c === null)).toBe(true);
   });
 });
 describe('new game reset', () => {

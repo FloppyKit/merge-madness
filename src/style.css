@@ -19,3 +19,13 @@ button{font-size:20px;border:0;border-radius:12px;padding:12px;width:100%;margin
 .confirm-text{font-size:22px;margin-bottom:18px}
 .confirm-box button{display:block;width:100%;margin:8px 0;padding:12px;font-size:18px;border:none;border-radius:10px;cursor:pointer}
 #confirm-yes{background:#e57373;color:#fff}#confirm-no{background:#66bb6a;color:#fff}
+
+#math-btn{background:#7e57c2}#math-btn small{display:block;font-size:13px}
+#math-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:30}
+.math-box{background:#2c3560;border:5px solid #7e57c2;border-radius:24px;padding:24px 28px;text-align:center;width:min(440px,90vw)}
+.math-title{font-size:26px;color:#ffd54a;font-weight:bold}#math-q{font-size:48px;font-weight:900;margin:14px 0}
+#math-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.math-choice{font-size:30px;padding:18px;margin:0;background:#42a5f5;touch-action:manipulation}.math-choice b{color:#ffd54a;margin-right:8px}
+.math-choice.right{background:#43a047}.math-choice.wrong{background:#e53935}.math-choice:disabled{cursor:default}
+#math-result{min-height:40px;font-size:26px;font-weight:bold;margin-top:12px}#math-result.good{color:#8f8}#math-result.bad{color:#ffab91}
+#math-nav button{font-size:22px}#math-close{background:#6b5560}
