@@ -11,3 +11,11 @@ button{font-size:20px;border:0;border-radius:12px;padding:12px;width:100%;margin
 .win-box{background:#2c3560;border:6px solid #ffd700;border-radius:24px;padding:32px 48px;text-align:center}
 .win-title{font-size:96px;font-weight:900;color:#ffd700;text-shadow:0 6px 0 #b8860b,0 0 30px #fff3}
 .win-sub{font-size:28px;margin:8px 0 16px}#keep-playing{font-size:26px;width:auto;padding:14px 32px}
+
+#new-game-btn{margin-top:18px;padding:6px 12px;font-size:14px;background:#6b5560;color:#eee;border:none;border-radius:8px;cursor:pointer;opacity:.85}
+#new-game-btn:hover{opacity:1;background:#8a5a64}
+#confirm-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:20}
+.confirm-box{background:#2a3358;color:#fff;padding:24px 28px;border-radius:16px;text-align:center;max-width:360px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.confirm-text{font-size:22px;margin-bottom:18px}
+.confirm-box button{display:block;width:100%;margin:8px 0;padding:12px;font-size:18px;border:none;border-radius:10px;cursor:pointer}
+#confirm-yes{background:#e57373;color:#fff}#confirm-no{background:#66bb6a;color:#fff}

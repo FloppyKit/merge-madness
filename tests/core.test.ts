@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { newGame, moveItem, spawn, buy } from '../src/core/game';
+import { newGame, moveItem, spawn, buy, resetGame } from '../src/core/game';
 import { save, load } from '../src/core/save';
 import { TIER_COIN_VALUES, SHOP, STARTING_COINS } from '../src/config';
 
@@ -103,5 +103,17 @@ describe('Lucky Chance', () => {
   it('refuses when coins < 50', () => {
     const s = newGame(); s.coins = 49;
     expect(buy(s, 'luckyChance').ok).toBe(false); expect(s.coins).toBe(49); expect(s.cells.every(c => c === null)).toBe(true);
+  });
+});
+describe('new game reset', () => {
+  it('resetGame empties board, restores coins, clears boost and won, and saves clean', () => {
+    const s = newGame(); s.cells[0] = 5; s.cells[7] = 9; s.coins = 999; s.boostMerges = 3; s.won = true;
+    const same = resetGame(s);
+    expect(same).toBe(s);
+    expect(s.cells.every(c => c === null)).toBe(true); expect(s.cells.length).toBe(36);
+    expect(s.coins).toBe(STARTING_COINS); expect(s.boostMerges).toBe(0); expect(s.won).toBe(false);
+    const m = new Map<string, string>(); const st = { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => { m.set(k, v); } };
+    save(s, st); const l = load(st);
+    expect(l.coins).toBe(STARTING_COINS); expect(l.cells.every(c => c === null)).toBe(true); expect(l.won).toBe(false);
   });
 });

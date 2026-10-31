@@ -53,4 +53,18 @@ await p.click('#keep-playing'); await p.waitForTimeout(200);
 console.log('after keep playing overlay', await p.locator('#win-overlay').count());
 await p.reload(); await p.waitForTimeout(800);
 console.log('after reload (won save) overlay', await p.locator('#win-overlay').count(), 'won', await p.evaluate(()=>window.__state.won));
+// NEW GAME: seed a save, No keeps it, Yes resets it
+await p.evaluate(()=>{ const c=Array(36).fill(null); c[0]=3; c[5]=6; c[20]=2; localStorage.setItem('miles-merge-v0', JSON.stringify({cols:6,rows:6,cells:c,coins:321,boostMerges:2,won:false})); });
+await p.reload(); await p.waitForTimeout(800);
+const orbs = async()=>(await p.evaluate(()=>window.__state.cells)).filter(x=>x!==null).length;
+console.log('new game seeded: coins', await coins(), 'orbs', await orbs());
+await p.click('#new-game-btn'); await p.waitForTimeout(200);
+console.log('confirm shown', await p.locator('#confirm-overlay').isVisible(), 'text', await p.textContent('.confirm-text'));
+await p.screenshot({ path: 'shots/09-new-game.png' });
+await p.click('#confirm-no'); await p.waitForTimeout(200);
+console.log('after No: coins', await coins(), 'orbs', await orbs(), 'boost', await p.evaluate(()=>window.__state.boostMerges), 'overlay', await p.locator('#confirm-overlay').count());
+await p.click('#new-game-btn'); await p.click('#confirm-yes'); await p.waitForTimeout(300);
+console.log('after Yes: coins', await coins(), 'orbs', await orbs(), 'boost', await p.evaluate(()=>window.__state.boostMerges), 'won', await p.evaluate(()=>window.__state.won));
+await p.reload(); await p.waitForTimeout(800);
+console.log('after reload: coins', await coins(), 'orbs', await orbs(), 'saved', await p.evaluate(()=>localStorage.getItem('miles-merge-v0')));
 console.log('errors', errs); await b.close();

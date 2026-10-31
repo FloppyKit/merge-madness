@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { BoardScene } from './scenes/BoardScene';
 import { load, save } from './core/save';
-import { buy, spawn, checkWin, ShopId } from './core/game';
+import { buy, spawn, resetGame, checkWin, ShopId } from './core/game';
 import { SHOP, tierValue } from './config';
 import { showWin } from './win';
 
@@ -26,6 +26,15 @@ const msg = (t: string) => { $('msg').textContent = t; };
   $('shop').appendChild(b);
 });
 $('spawn-btn').onclick = () => { const i = spawn(state); if (i < 0) msg('Board is full!'); else scene.redraw(i); refresh(); };
+
+$('new-game-btn').onclick = () => {
+  if (document.getElementById('confirm-overlay')) return;
+  const o = document.createElement('div'); o.id = 'confirm-overlay';
+  o.innerHTML = '<div class="confirm-box"><div class="confirm-text">Start over? Your orbs and coins will go away.</div><button id="confirm-yes">Yes, start over</button><button id="confirm-no">No, keep playing</button></div>';
+  document.body.appendChild(o);
+  $('confirm-no').onclick = () => o.remove();
+  $('confirm-yes').onclick = () => { o.remove(); document.getElementById('win-overlay')?.remove(); resetGame(state); scene.redraw(); msg('New game! Tap Spawn to begin ✨'); refresh(); };
+};
 
 scene = new BoardScene(state, refresh);
 new Phaser.Game({ type: Phaser.AUTO, parent: 'game', width: 600, height: 600, backgroundColor: '#1d2440', scene });

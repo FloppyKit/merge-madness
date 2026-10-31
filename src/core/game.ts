@@ -8,6 +8,11 @@ export type MoveResult = { kind: 'merge'; tier: number; coins: number } | { kind
 export function newGame(): GameState {
   return { cols: C.BOARD_COLS, rows: C.BOARD_ROWS, cells: Array(C.BOARD_COLS * C.BOARD_ROWS).fill(null), coins: C.STARTING_COINS, boostMerges: 0, won: false };
 }
+// Start over: wipe the board, coins back to start, no boost, not won. Changes s in place.
+export function resetGame(s: GameState): GameState {
+  Object.assign(s, newGame());
+  return s;
+}
 export const idx = (s: GameState, x: number, y: number) => y * s.cols + x;
 export const emptyCells = (s: GameState) => s.cells.map((c, i) => (c === null ? i : -1)).filter(i => i >= 0);
 
