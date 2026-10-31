@@ -21,4 +21,20 @@ const b2 = await coins(); await p.click('#shop-luckySpawn'); await p.waitForTime
 console.log('buy Lucky Spawn coins', b2, '->', await coins(), 'msg', await p.textContent('#msg'), 'tier2 count', (await p.evaluate(()=>window.__state.cells)).filter(x=>x===2).length);
 await p.screenshot({ path: 'shots/03-shop-buy.png' });
 await p.reload(); await p.waitForTimeout(500); console.log('after reload coins', await coins());
+// Lucky Chance: seed a save with 120 coins + a few orbs before load (test-only, no cheat button)
+await p.evaluate(()=>{ const c=Array(36).fill(null); c[0]=1; c[1]=2; c[2]=3; localStorage.setItem('miles-merge-v0', JSON.stringify({cols:6,rows:6,cells:c,coins:120,boostMerges:0})); });
+await p.reload(); await p.waitForTimeout(800);
+const lcBefore = await coins(); const filledBefore = (await p.evaluate(()=>window.__state.cells)).filter(x=>x!==null).length;
+const prevCells = await p.evaluate(()=>[...window.__state.cells]);
+await p.click('#shop-luckyChance'); await p.waitForTimeout(300);
+const nowCells = await p.evaluate(()=>window.__state.cells);
+const newIdx = nowCells.findIndex((v,i)=>prevCells[i]===null && v!==null);
+console.log('Lucky Chance coins', lcBefore, '->', await coins(), 'orbs', filledBefore, '->', nowCells.filter(x=>x!==null).length, 'new cell', newIdx, 'tier', nowCells[newIdx], 'msg', await p.textContent('#msg'));
+await p.screenshot({ path: 'shots/04-lucky-chance.png' });
+await p.evaluate(()=>{ localStorage.setItem('miles-merge-v0', JSON.stringify({cols:6,rows:6,cells:Array(36).fill(1),coins:120,boostMerges:0})); });
+await p.reload(); await p.waitForTimeout(600); await p.click('#shop-luckyChance'); await p.waitForTimeout(200);
+console.log('full board: coins', await coins(), 'msg', await p.textContent('#msg'));
+await p.evaluate(()=>{ localStorage.setItem('miles-merge-v0', JSON.stringify({cols:6,rows:6,cells:Array(36).fill(null),coins:49,boostMerges:0})); });
+await p.reload(); await p.waitForTimeout(600);
+console.log('49 coins: disabled', await p.isDisabled('#shop-luckyChance'), 'title', await p.getAttribute('#shop-luckyChance','title'));
 console.log('errors', errs); await b.close();

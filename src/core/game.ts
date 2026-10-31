@@ -40,13 +40,28 @@ export function moveItem(s: GameState, from: number, to: number): MoveResult {
   return { kind: 'swap' };
 }
 
-export function buy(s: GameState, id: ShopId, rand = Math.random): { ok: boolean; reason?: string; cell?: number } {
+// Pick a key using relative weights. rand() must return [0, 1).
+export function weightedPick(weights: Record<number, number>, rand = Math.random): number {
+  const entries = Object.entries(weights).map(([k, w]) => [Number(k), Math.max(0, w)] as const).sort((a, b) => a[0] - b[0]);
+  const total = entries.reduce((t, [, w]) => t + w, 0);
+  let r = rand() * total;
+  for (const [k, w] of entries) { if (w > 0 && r < w) return k; r -= w; }
+  return entries.filter(([, w]) => w > 0).pop()![0];
+}
+
+export function buy(s: GameState, id: ShopId, rand = Math.random): { ok: boolean; reason?: string; cell?: number; tier?: number } {
   const item = C.SHOP[id];
   if (s.coins < item.price) return { ok: false, reason: 'Not enough coins' };
   let cell: number | undefined;
   if (id === 'luckySpawn') {
     if (!emptyCells(s).length) return { ok: false, reason: 'Board is full' };
     cell = placeAt(s, 2, rand);
+  } else if (id === 'luckyChance') {
+    if (!emptyCells(s).length) return { ok: false, reason: 'Board is full' };
+    const tier = weightedPick(C.LUCKY_CHANCE_WEIGHTS, rand);
+    cell = placeAt(s, tier, rand);
+    s.coins -= item.price;
+    return { ok: true, cell, tier };
   } else if (id === 'coinBoost') {
     s.boostMerges += C.SHOP.coinBoost.merges;
   } else {

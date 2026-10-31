@@ -36,4 +36,13 @@ export const SHOP = {
   luckySpawn: { name: 'Lucky Spawn', price: 15, description: 'Drops a tier 2 gem' },
   coinBoost: { name: 'Coin Boost', price: 25, description: '2x coins for the next 5 merges', merges: 5, multiplier: 2 },
   magicUpgrade: { name: 'Magic Upgrade', price: 40, description: 'Your smallest gem grows one tier' },
+  luckyChance: { name: 'Lucky Chance', price: 50, description: 'A surprise gem! Could be tiny... or HUGE' },
+};
+
+// ----- Lucky Chance odds (Miles designed these!) -----
+// Each tier gets a "weight". BIGGER number = MORE likely to come out.
+// They don't have to add up to 100. A tier with 80 is 80 times more likely than a tier with 1.
+// Set a tier to 0 and it will never come out.
+export const LUCKY_CHANCE_WEIGHTS: Record<number, number> = {
+  1: 80, 2: 50, 3: 40, 4: 30, 5: 20, 6: 10, 7: 5, 8: 1,
 };
